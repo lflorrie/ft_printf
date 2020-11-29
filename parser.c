@@ -6,7 +6,7 @@
 /*   By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 15:16:18 by lflorrie          #+#    #+#             */
-/*   Updated: 2020/11/27 13:02:58 by lflorrie         ###   ########.fr       */
+/*   Updated: 2020/11/30 01:58:42 by lflorrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,51 +20,120 @@ typedef struct	s_format_rule
 		int	right;
 }		t_format_rule;
 
+
+void	processing_width(t_format_rule fr, int len)
+{
+	int	wid;
+
+	wid = fr.width;
+	while (wid - len > 0)
+	{
+		write(1, &fr.symb, 1);
+		--wid;
+	}
+}
+
+void	processing_int(va_list args, t_format_rule fr)
+{
+	int	num;
+	char	*p;
+	int	ac;
+	int	len;
+
+	num = va_arg(args, int);
+	p = ft_itoa(num);
+	len = ft_strlen(p);
+	ac = fr.accuracy;
+	if (ac > len || ac == 0)
+	{
+		len = ac;
+		if (num < 0)
+			++len;
+	}
+	if (num < 0 && fr.symb == '0')
+	{
+		++p;
+		write(1, "-", 1);
+	}
+	if (!fr.right)
+		processing_width(fr, len);
+	if (num < 0 && fr.symb != '0')
+	{
+		++p;
+		write(1, "-", 1);
+	}
+	while (ac > (int)ft_strlen(p))
+	{
+		write(1, "0", 1);
+		--ac;
+	}
+	write(1, p, ft_strlen(p));
+	if (fr.right)
+		processing_width(fr, len);
+}
+
+void	processing_char(va_list args, t_format_rule fr)
+{
+	char	ch;
+	
+	ch = (char)va_arg(args, int);
+	if(!fr.right)
+		processing_width(fr, 1);
+	write(1, &ch, 1);
+	if (fr.right)
+		processing_width(fr, 1);
+}
+
+void	processing_string(va_list args, t_format_rule fr)
+{
+	char	*s;
+	int		len;
+
+	if ((s = (char*)va_arg(args, int*)) == NULL)
+		s = fr.accuracy >= 6 || fr.accuracy == -1 ? "(null)" : "";
+	len = (int)ft_strlen(s);
+	if (fr.accuracy < len && fr.accuracy >= 0)
+		len = fr.accuracy;
+	if (!fr.right)
+		processing_width(fr, len);
+	write(1, s, len);
+	if (fr.right)
+		processing_width(fr, len);
+}
+
+void	processing_pointer(va_list args, t_format_rule fr)
+{
+	size_t	num;
+	char	*p;
+
+	num = va_arg(args, size_t);
+	p = ft_itoa16(num);
+	if (num == 0)
+		p = "(nil)";
+	if (!fr.right)
+		processing_width(fr, ft_strlen(p));
+	write(1, p, ft_strlen(p));
+	if (fr.right)
+		processing_width(fr, ft_strlen(p));
+}
+
 void	processing_flags(const char flag, va_list args, t_format_rule fr)
 {
 	if (flag == 'c')
 	{
-		char a = (char)va_arg(args, int);
-		write(1, &a, 1);
+		processing_char(args, fr);
 	}
 	if (flag == 's')
 	{
-		char  *s = (char*)va_arg(args, int*);
-		write(1, s, ft_strlen(s));
+		processing_string(args, fr);
 	}
 	if (flag == 'p')
 	{
-		size_t num;
-		num = va_arg(args, size_t);
-		char *p = ft_itoa16(num);
-		write(1, p, ft_strlen(p));
+		processing_pointer(args, fr);
 	}
 	if (flag == 'd' || flag == 'i')
 	{
-		int num;
-		num = va_arg(args, int);
-		char *p = ft_itoa(num);
-
-		int ac = fr.accuracy - (int)ft_strlen(p);
-		int wid = fr.width;
-		if (ac > 0)
-			wid -= ac;
-		while (wid - (int)ft_strlen(p) > 0 && !fr.right)
-		{
-			write(1, &fr.symb, 1);
-			--wid;
-		}
-		while (ac > 0 && !fr.right)
-		{
-			write(1, "0", 1);
-			--ac;
-		}
-		write(1, p, ft_strlen(p));
-		while (wid - (int)ft_strlen(p) > 0 && fr.right)
-		{
-			write(1, &fr.symb, 1);
-			--wid;
-		}
+		processing_int(args, fr);
 	}
 	if (flag == '%')
 	{
@@ -72,7 +141,7 @@ void	processing_flags(const char flag, va_list args, t_format_rule fr)
 	}
 	if (flag == 'u')
 	{
-		
+		processing_int(args, fr);
 	}
 	if (flag == 'x' || flag == 'X')
 	{
@@ -85,31 +154,37 @@ void	processing(const char **format, va_list args)
 	t_format_rule fr;
 
 	fr.width = 0;
-	fr.accuracy = 0;
+	fr.accuracy = -1;
 	fr.symb = ' ';
 	fr.right = 0;
-	if (**format == '-')
+	while (**format == '-' || **format == '0')
 	{
-		fr.right = 1;
-		++*format;
-	}
-	if (**format == '0')
-	{
-		if (!fr.right)
-			fr.symb = '0';
-		++*format;
+		if (**format == '-')
+		{
+			fr.right = 1;
+			++*format;
+		}
+		if (**format == '0')
+		{
+			if (!fr.right)
+				fr.symb = '0';
+			++*format;
+		}
 	}
 	if (ft_isdigit(**format))
 	{
-		fr.width = **format - '0';
-		++*format;
+		fr.width = ft_atoi(*format);
+		while (ft_isdigit(**format))
+			++*format;
 	}
 	if (**format == '.')
 	{
 		++(*format);
+		fr.accuracy = 0;
 		if (ft_isdigit(**format))
-			fr.accuracy = **format - '0';
-		++(*format);
+			fr.accuracy = ft_atoi(*format);
+		while(ft_isdigit(**format))
+			++*format;
 		fr.symb = ' ';
 	}
 	processing_flags(**format, args, fr);
