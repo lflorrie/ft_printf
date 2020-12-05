@@ -1,47 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa16.c                                        :+:      :+:    :+:   */
+/*   ft_uitoa.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/23 23:08:27 by lflorrie          #+#    #+#             */
-/*   Updated: 2020/12/02 01:01:09 by lflorrie         ###   ########.fr       */
+/*   Created: 2020/10/28 17:39:52 by lflorrie          #+#    #+#             */
+/*   Updated: 2020/12/02 00:36:07 by lflorrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft/libft.h"
 
-static size_t	len(size_t n)
+static size_t	len(unsigned int n)
 {
 	int	i;
 
 	i = 1;
-	n = n / 16;
+	n = n / 10;
 	while (n != 0)
 	{
 		++i;
-		n = n / 16;
+		n = n / 10;
 	}
 	return (i);
 }
 
-char			*ft_itoa16(size_t nn, char flag)
+char			*ft_uitoa(unsigned int n)
 {
 	char		*result;
 	size_t		i;
-	size_t	n;
 
-	n = nn;
 	i = len(n);
-	if (!(result = (char*)malloc((i) * sizeof(char) + 1)))
+	if (!(result = (char*)malloc((i + 1) * sizeof(char))))
 		return (NULL);
 	result[i] = '\0';
 	while (i > 0)
 	{
-		
-		size_t temp = (n % 16) > 9 ? (flag - 10) : '0';
-		result[--i] = (char)(n % 16 + temp);
-		n /= 16;
+		result[--i] = (char)(n % 10 + '0');
+		n /= 10;
 	}
 	return (result);
 }

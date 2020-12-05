@@ -6,7 +6,7 @@
 #    By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/22 22:08:47 by lflorrie          #+#    #+#              #
-#    Updated: 2020/11/26 12:28:39 by lflorrie         ###   ########.fr        #
+#    Updated: 2020/12/02 00:32:02 by lflorrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ CFLAGS= -Werror -Wextra -Wall
 
 SRC=	ft_printf.c \
 	parser.c \
-	ft_itoa16.c
+	ft_itoa16.c \
+	ft_uitoa.c
 
 OBJ=$(SRC:.c=.o)
 

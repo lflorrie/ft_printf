@@ -6,12 +6,13 @@
 /*   By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 22:53:28 by lflorrie          #+#    #+#             */
-/*   Updated: 2020/11/30 01:07:16 by lflorrie         ###   ########.fr       */
+/*   Updated: 2020/12/04 01:20:52 by lflorrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "ft_printf.h"
+#include <assert.h>
 
 void	start(const char *s)
 {
@@ -153,8 +154,8 @@ void	testzerofill(const char *s)
 	printf("-.%03d.\n", 42);
 	ft_printf(".%02d.", 42);
 	printf("-.%02d.\n", 42);
-	ft_printf(".%00d.", 42);
-	printf("-%00d.\n", 42);
+	//ft_printf(".%00d.", 42);
+	//printf("-%00d.\n", 42);
 	end(s);
 }
 
@@ -165,16 +166,33 @@ void	testminus(const char *s)
 	printf("-.%-3d.\n", 42);
 	ft_printf(".%-5d.", 42);
 	printf("-.%-5d.\n", 42);
-	ft_printf(".%-05d.", 42);
-	printf("-.%-05d.\n", 42);
+	//ft_printf(".%-05d.", 42);
+	//printf("-.%-05d.\n", 42);
 	ft_printf(".%07d.", -52);
 	printf("-.%07d.\n", -52);
 	end(s);
 }
 
+void	testreturn(const char *s)
+{
+	start(s);
+	int a = 12;
+	int *p = &a;
+	//assert(printf("") == ft_printf(""));
+
+	assert(printf("%c", 'a') == ft_printf("%c", 'a'));
+	assert(printf("Hello") == ft_printf("Hello"));
+	assert(printf("%%") == ft_printf("%%"));
+	//assert(printf(NULL) == ft_printf(NULL));
+	assert(printf("%c%5.3d", 'g', 12) == ft_printf("%c%5.3d", 'g', 12));
+	assert(printf("%p", p) == ft_printf("%p", p));
+	assert(printf("a") == ft_printf("a"));
+	end(s);
+}
+
 int	main(void)
 {
-	teststr("teststr");
+	/*teststr("teststr");
 	testc("testc");
 	tests("tests");
 	testp("testp");
@@ -186,5 +204,8 @@ int	main(void)
 	testaccuracy("testaccuracy");
 	testzerofill("testzerofill");
 	testminus("testminus");
+	printf("\n================================================================================\n");
+	*/
+	testreturn("TESTRETURN");
 	return (0);
 }
