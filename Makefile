@@ -6,7 +6,7 @@
 #    By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/22 22:08:47 by lflorrie          #+#    #+#              #
-#    Updated: 2020/12/09 22:51:11 by lflorrie         ###   ########.fr        #
+#    Updated: 2020/12/21 18:56:56 by lflorrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,11 @@ NAME=libftprintf.a
 
 %.o:%.c
 	gcc -c $(CFLAGS) $< -o $@
-lib:
-	$(MAKE) -C libft/
 
-$(NAME): lib $(OBJ)
-	ar -rcs $(NAME) $(OBJ) libft/libft.a
+$(NAME): $(OBJ)
+	$(MAKE) -C libft/
+	ar -rcsT $(NAME) $? libft/libft.a
+
 all: $(NAME)
 
 test:
@@ -38,4 +38,4 @@ fclean: clean
 	rm -rf $(NAME) && $(MAKE) fclean -C libft/
 re: fclean all
 
-.PHONY: all clean fclean $(NAME) re
+.PHONY: all clean fclean re
