@@ -20,7 +20,6 @@ typedef struct	s_format_rule
 		int	right;
 }		t_format_rule;
 
-
 void	processing_width(t_format_rule fr, int len)
 {
 	int	wid;
@@ -35,10 +34,10 @@ void	processing_width(t_format_rule fr, int len)
 
 int	processing_int(va_list args, t_format_rule fr)
 {
-	int	num;
+	int		num;
 	char	*p;
-	int	ac;
-	int	len;
+	int		ac;
+	int		len;
 
 	num = va_arg(args, int);
 	p = ft_itoa(num);
@@ -79,9 +78,9 @@ int	processing_int(va_list args, t_format_rule fr)
 int	processing_char(va_list args, t_format_rule fr)
 {
 	char	ch;
-	
+
 	ch = (char)va_arg(args, int);
-	if(!fr.right)
+	if (!fr.right)
 		processing_width(fr, 1);
 	write(1, &ch, 1);
 	if (fr.right)
@@ -131,9 +130,9 @@ int	processing_pointer(va_list args, t_format_rule fr)
 int	processing_uint(va_list args, t_format_rule fr, char flag)
 {
 	unsigned int	num;
-	char		*p;
-	int		ac;
-	int		len_ac;
+	char			*p;
+	int				ac;
+	int				len_ac;
 
 	num = va_arg(args, unsigned int);
 	if (flag == 'u')
@@ -201,7 +200,7 @@ int	processing_flags(const char flag, va_list args, t_format_rule fr)
 
 int	processing(const char **format, va_list args)
 {
-	t_format_rule fr;
+	t_format_rule	fr;
 
 	fr.width = 0;
 	fr.accuracy = -1;
@@ -244,7 +243,7 @@ int	processing(const char **format, va_list args)
 		fr.accuracy = 0;
 		if (ft_isdigit(**format))
 			fr.accuracy = ft_atoi(*format);
-		while(ft_isdigit(**format))
+		while (ft_isdigit(**format))
 			++*format;
 		if (**format == '*')
 		{
@@ -255,6 +254,7 @@ int	processing(const char **format, va_list args)
 	}
 	return (processing_flags(**format, args, fr));
 }
+
 int	parser(const char *format, va_list args)
 {
 	int	result;

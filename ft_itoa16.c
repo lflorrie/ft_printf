@@ -9,6 +9,7 @@
 /*   Updated: 2020/12/02 01:01:09 by lflorrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft/libft.h"
 
 static size_t	len(size_t n)
@@ -29,7 +30,7 @@ char			*ft_itoa16(size_t nn, char flag)
 {
 	char		*result;
 	size_t		i;
-	size_t	n;
+	size_t		n;
 
 	n = nn;
 	i = len(n);
