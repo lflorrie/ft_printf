@@ -31,6 +31,7 @@ char			*ft_itoa16(size_t nn, char flag)
 	char		*result;
 	size_t		i;
 	size_t		n;
+	size_t		temp;
 
 	n = nn;
 	i = len(n);
@@ -39,8 +40,7 @@ char			*ft_itoa16(size_t nn, char flag)
 	result[i] = '\0';
 	while (i > 0)
 	{
-		
-		size_t temp = (n % 16) > 9 ? (flag - 10) : '0';
+		temp = (n % 16) > 9 ? (flag - 10) : '0';
 		result[--i] = (char)(n % 16 + temp);
 		n /= 16;
 	}

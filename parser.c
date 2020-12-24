@@ -12,14 +12,6 @@
 
 #include "ft_printf_utils.h"
 
-typedef struct	s_format_rule
-{
-		int	width;
-		int	accuracy;
-		char	symb;
-		int	right;
-}		t_format_rule;
-
 void	processing_width(t_format_rule fr, int len)
 {
 	int	wid;
@@ -36,7 +28,6 @@ int		max(int a, int b, int c)
 {
 	int result;
 
-
 	if (a > b)
 		result = a;
 	else
@@ -46,7 +37,7 @@ int		max(int a, int b, int c)
 	return (result);
 }
 
-int	processing_int(va_list args, t_format_rule fr)
+int		processing_int(va_list args, t_format_rule fr)
 {
 	int		num;
 	char	*p;
@@ -89,7 +80,7 @@ int	processing_int(va_list args, t_format_rule fr)
 	return (max(fr.width, fr.accuracy, len));
 }
 
-int	processing_char(va_list args, t_format_rule fr)
+int		processing_char(va_list args, t_format_rule fr)
 {
 	char	ch;
 
@@ -104,7 +95,7 @@ int	processing_char(va_list args, t_format_rule fr)
 	return (1);
 }
 
-int	processing_string(va_list args, t_format_rule fr)
+int		processing_string(va_list args, t_format_rule fr)
 {
 	char	*s;
 	int		len;
@@ -124,7 +115,7 @@ int	processing_string(va_list args, t_format_rule fr)
 	return (len);
 }
 
-int	processing_pointer(va_list args, t_format_rule fr)
+int		processing_pointer(va_list args, t_format_rule fr)
 {
 	size_t	num;
 	char	*p;
@@ -134,7 +125,12 @@ int	processing_pointer(va_list args, t_format_rule fr)
 	p = ft_itoa16(num, 'a');
 	len = ft_strlen(p) + 2;
 	if (num == 0)
+	{
 		p = "(nil)";
+		len = 5;
+	}
+	if (fr.width > len)
+		len = fr.width;
 	if (!fr.right)
 		processing_width(fr, ft_strlen(p) + 2);
 	if (num != 0)
@@ -145,7 +141,7 @@ int	processing_pointer(va_list args, t_format_rule fr)
 	return (len);
 }
 
-int	processing_uint(va_list args, t_format_rule fr, char flag)
+int		processing_uint(va_list args, t_format_rule fr, char flag)
 {
 	unsigned int	num;
 	char			*p;
@@ -176,10 +172,10 @@ int	processing_uint(va_list args, t_format_rule fr, char flag)
 		write(1, p, ft_strlen(p));
 	if (fr.right)
 		processing_width(fr, len_ac);
-	return (max(fr.width, fr.accuracy, ft_strlen(p)));
+	return (max(fr.width, fr.accuracy, len_ac));
 }
 
-int	processing_flags(const char flag, va_list args, t_format_rule fr)
+int		processing_flags(const char flag, va_list args, t_format_rule fr)
 {
 	int result;
 
@@ -216,7 +212,7 @@ int	processing_flags(const char flag, va_list args, t_format_rule fr)
 	return (result);
 }
 
-int	processing(const char **format, va_list args)
+int		processing(const char **format, va_list args)
 {
 	t_format_rule	fr;
 
@@ -273,7 +269,7 @@ int	processing(const char **format, va_list args)
 	return (processing_flags(**format, args, fr));
 }
 
-int	parser(const char *format, va_list args)
+int		parser(const char *format, va_list args)
 {
 	int	result;
 

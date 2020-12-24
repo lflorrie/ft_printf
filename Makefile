@@ -6,7 +6,7 @@
 #    By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/22 22:08:47 by lflorrie          #+#    #+#              #
-#    Updated: 2020/12/21 18:56:56 by lflorrie         ###   ########.fr        #
+#    Updated: 2020/12/24 17:53:10 by lflorrie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,8 @@ all: $(NAME)
 
 test:
 	gcc $(SRC) tests.c -Llibft -lft
+test2:
+	gcc -o test main.c -L. -lftprintf
 clean:
 	rm -rf *.o
 fclean: clean

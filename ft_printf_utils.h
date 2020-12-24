@@ -15,9 +15,17 @@
 
 #include <stdarg.h>
 #include "libft/libft.h"
-int	parser(const char *format, va_list args);
+typedef struct	s_format_rule
+{
+				int	width;
+				int	accuracy;
+				char	symb;
+				int	right;
+}				t_format_rule;
 
-char	*ft_itoa16(size_t nn, char flag);
+int				parser(const char *format, va_list args);
 
-char	*ft_uitoa(unsigned int nn);
+char			*ft_itoa16(size_t nn, char flag);
+
+char			*ft_uitoa(unsigned int nn);
 #endif
