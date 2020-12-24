@@ -6,7 +6,7 @@
 /*   By: lflorrie <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 15:16:18 by lflorrie          #+#    #+#             */
-/*   Updated: 2020/12/04 01:24:00 by lflorrie         ###   ########.fr       */
+/*   Updated: 2020/12/21 20:28:59 by lflorrie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ void	processing_width(t_format_rule fr, int len)
 	}
 }
 
+int		max(int a, int b, int c)
+{
+	int result;
+
+
+	if (a > b)
+		result = a;
+	else
+		result = b;
+	if (c > result)
+		result = c;
+	return (result);
+}
+
 int	processing_int(va_list args, t_format_rule fr)
 {
 	int		num;
@@ -43,7 +57,7 @@ int	processing_int(va_list args, t_format_rule fr)
 	p = ft_itoa(num);
 	len = ft_strlen(p);
 	ac = fr.accuracy;
-	if (ac > len || ac == 0)
+	if (ac > len || (ac == 0 && *p == '0'))
 	{
 		len = ac;
 		if (num < 0)
@@ -72,7 +86,7 @@ int	processing_int(va_list args, t_format_rule fr)
 		write(1, p, ft_strlen(p));
 	if (fr.right)
 		processing_width(fr, len);
-	return (-1);
+	return (max(fr.width, fr.accuracy, len));
 }
 
 int	processing_char(va_list args, t_format_rule fr)
@@ -105,16 +119,20 @@ int	processing_string(va_list args, t_format_rule fr)
 	write(1, s, len);
 	if (fr.right)
 		processing_width(fr, len);
-	return (ft_strlen(s));
+	if (len < fr.width)
+		len = fr.width;
+	return (len);
 }
 
 int	processing_pointer(va_list args, t_format_rule fr)
 {
 	size_t	num;
 	char	*p;
+	int		len;
 
 	num = va_arg(args, size_t);
 	p = ft_itoa16(num, 'a');
+	len = ft_strlen(p) + 2;
 	if (num == 0)
 		p = "(nil)";
 	if (!fr.right)
@@ -124,7 +142,7 @@ int	processing_pointer(va_list args, t_format_rule fr)
 	write(1, p, ft_strlen(p));
 	if (fr.right)
 		processing_width(fr, ft_strlen(p) + 2);
-	return (-1);
+	return (len);
 }
 
 int	processing_uint(va_list args, t_format_rule fr, char flag)
@@ -153,12 +171,12 @@ int	processing_uint(va_list args, t_format_rule fr, char flag)
 		write(1, "0", 1);
 	}
 	if (ac == 0)
-		write(1, " ", 0);
+		write(1, "", 0);
 	else
 		write(1, p, ft_strlen(p));
 	if (fr.right)
 		processing_width(fr, len_ac);
-	return (-1);
+	return (max(fr.width, fr.accuracy, ft_strlen(p)));
 }
 
 int	processing_flags(const char flag, va_list args, t_format_rule fr)
