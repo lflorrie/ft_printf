@@ -1,3 +1,9 @@
 pft/
 .*
 *.o
+main.c
+tests.c
+test.txt
+*.out
+norm.sh
+*.a
