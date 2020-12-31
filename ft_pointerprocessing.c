@@ -23,7 +23,7 @@ int		processing_pointer(va_list args, t_format_rule fr)
 	len = ft_strlen(p) + 2;
 	if (num == 0)
 	{
-		p = "(nil)";
+		p = ft_strdup("(nil)");
 		len = 5;
 	}
 	if (fr.width > len)
@@ -35,5 +35,6 @@ int		processing_pointer(va_list args, t_format_rule fr)
 	write(1, p, ft_strlen(p));
 	if (fr.right)
 		processing_width(fr, ft_strlen(p) + 2);
+	free(p);
 	return (len);
 }

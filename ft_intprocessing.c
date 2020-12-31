@@ -71,6 +71,7 @@ int		processing_int(va_list args, t_format_rule fr)
 			++len;
 	}
 	print_num(p, len, fr);
+	free(p);
 	return (max(fr.width, fr.accuracy, len));
 }
 
@@ -91,5 +92,6 @@ int		processing_uint(va_list args, t_format_rule fr, char flag)
 	if (fr.accuracy > len_ac || (fr.accuracy == 0 && *p == '0'))
 		len_ac = fr.accuracy;
 	print_num(p, len_ac, fr);
+	free(p);
 	return (max(fr.width, fr.accuracy, len_ac));
 }
